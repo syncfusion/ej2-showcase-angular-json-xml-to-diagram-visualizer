@@ -1,0 +1,65 @@
+<div class="main-container">
+  <!-- Nav Bar -->
+  <app-navbar
+    (fileAction)="onFileActionTriggered($event)"
+    (viewToggle)="onViewOptionToggled($event)"
+    (themeChange)="onThemeChanged($event)"
+    (editorTypeChanged)="onEditorTypeChanged($event)">
+  </app-navbar>
+
+  <div class="app-container">
+    <!-- Left: editor -->
+    <div #leftPanel class="panel left-panel">
+      <app-editor
+        [editorType]="currentEditorType"
+        (diagramData)="onDiagramDataReceived($event)"
+        (validStatus)="isDataValid = $event">
+      </app-editor>
+    </div>
+
+    <!-- Draggable splitter -->
+    <div class="splitter" (mousedown)="onPanelResizeStart($event)"></div>
+
+    <!-- Right: diagram + hamburger menu & toolbar -->
+    <div class="panel right-panel">
+      <app-spinner [visible]="!isDataValid"></app-spinner>
+      <app-hamburger
+        (exportImage)="exportDialogComponent.open()"
+        (rotateLayout)="diagramComponent.rotateLayout()"
+        (collapseGraph)="diagramComponent.toggleCollapse()">
+      </app-hamburger>
+
+      <app-diagram
+        #diagramComp
+        [nodes]="parsedDiagramData.nodes"
+        [connectors]="parsedDiagramData.connectors"
+        (nodeClicked)="onDiagramNodeClicked($event)"
+        (searchStats)="searchStatistics = $event">
+      </app-diagram>
+
+      <app-toolbar
+        [total]="searchStatistics.total"
+        [current]="searchStatistics.current"
+        (nextMatch)="diagramComponent.focusNext()"
+        (toolClick)="handleToolbarAction($event)"
+        (searchNode)="diagramComponent.searchNodes($event)">
+      </app-toolbar>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="status-message" [class.invalid]="!isDataValid">
+      <i *ngIf="isDataValid" class="e-icons e-check"></i>
+      <i *ngIf="!isDataValid" class="e-icons e-close"></i>
+      {{ isDataValid ? 'Valid' : 'Invalid' }} {{ currentEditorType | uppercase }}
+    </span>
+    <span class="node-count">
+      Nodes: {{ parsedDiagramData.nodes.length }}
+    </span>
+  </div>
+</div>
+
+<!-- Popups outside main container -->
+<app-node-popup></app-node-popup>
+<app-export-dialog #exportDialog (exportConfirmed)="onDiagramExportRequested($event)"></app-export-dialog>
