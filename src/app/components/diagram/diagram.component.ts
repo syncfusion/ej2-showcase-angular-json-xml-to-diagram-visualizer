@@ -17,7 +17,8 @@ import {
   ShapeAnnotation,
   Node,
   SnapSettingsModel,
-  SnapConstraints
+  SnapConstraints,
+  IExpandStateChangeEventArgs
 } from '@syncfusion/ej2-angular-diagrams';
 import {
   NodeConstraints,
@@ -26,6 +27,7 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DiagramNode } from '../../services/diagram-parser.service';
 import themeService from '../../services/theme.service';
+import { HamburgerComponent } from '../hamburger/hamburger.component';
 
 @Component({
   selector: 'app-diagram',
@@ -40,6 +42,7 @@ import themeService from '../../services/theme.service';
       [layout]="layout"
       [getNodeDefaults]="getNodeDefaults.bind(this)"
       [getConnectorDefaults]="getConnectorDefaults.bind(this)"
+      (expandStateChange)="handleExpandStateChange($event)"
       [nodes]="nodes"
       [connectors]="connectors"
       [snapSettings]="snapSettings"
@@ -398,6 +401,21 @@ export class DiagramComponent implements OnInit {
     return connector;
   }
 
+  handleExpandStateChange(args: IExpandStateChangeEventArgs) {
+    const node: Node = args.element as Node;
+    if (!node || typeof node !== 'object') {
+        return;
+    }
+    // Check if it's a root node (no incoming edges)
+    const isRootNode = !node.inEdges || node.inEdges.length === 0;
+    if (isRootNode) {
+        this.isGraphCollapsed = !node.isExpanded;
+        let hamburger = new HamburgerComponent();
+        hamburger.toggleCollapseItem(this.isGraphCollapsed);
+    }
+    this.diagram.doLayout();
+};
+
   // refreshes the diagram layout and fits it to the page
   refreshLayout() {
     this.diagram.refresh();
@@ -439,6 +457,8 @@ export class DiagramComponent implements OnInit {
   // Toggles the collapse state of the diagram nodes
   public toggleCollapse(): void {
     const diagramNodes = this.diagram.nodes;
+    let root = this.diagram.nodes.find((node)=>(node as Node).inEdges.length === 0);
+    this.isGraphCollapsed = !root.isExpanded;
     // if the graph is collapsed, expand all nodes
     if (this.isGraphCollapsed) {
       diagramNodes.forEach((diagramNode) => (diagramNode.isExpanded = true));
@@ -581,12 +601,14 @@ export class DiagramComponent implements OnInit {
   // toggles the visibility of child item count annotation in the diagram nodes
   public toggleChildCount(): void {
     this.showChildItemsCount = !this.showChildItemsCount;
+    this.diagram.fitToPage({ mode: "Page", region: "Content", canZoomIn: true });
     this.diagram.refresh();
   }
 
   // toggles the visibility of expand/collapse icons in the diagram nodes
   public toggleExpandIcons(): void {
     this.showExpandCollapseIcon = !this.showExpandCollapseIcon;
+    this.diagram.fitToPage({ mode: "Page", region: "Content", canZoomIn: true });
     this.diagram.refresh();
   }
 

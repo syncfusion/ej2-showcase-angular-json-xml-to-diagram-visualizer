@@ -17,6 +17,8 @@ import { Subscription } from 'rxjs';
 import { EditorService } from '../../services/editor.service';
 import { NuMonacoEditorComponent } from '@ng-util/monaco-editor';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser'
+import { HamburgerComponent } from '../hamburger/hamburger.component';
+import { DiagramComponent } from '../diagram/diagram.component';
 
 @Component({
   selector: 'app-editor',
@@ -143,6 +145,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       console.error('Editor type switch error:', conversionError);
       this.validStatus.emit(false);
     }
+    let diagramComponent = new DiagramComponent();
+    diagramComponent.isGraphCollapsed = false;
+    let hamburger = new HamburgerComponent();
+    hamburger.toggleCollapseItem(false);
   }
   
   // Handle editor content changes and parse data based on current editor type
@@ -167,6 +173,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       console.error("Parsing error:", parsingError);
       this.validStatus.emit(false);
     }
+    let diagramComponent = new DiagramComponent();
+    diagramComponent.isGraphCollapsed = false;
+    let hamburger = new HamburgerComponent();
+    hamburger.toggleCollapseItem(false);
   }
 
   // Convert JSON object to diagram data and emit validation status

@@ -9,12 +9,14 @@ import {
   MenuEventArgs,
   ItemModel
 } from '@syncfusion/ej2-angular-splitbuttons';
+import { DiagramComponent } from '../diagram/diagram.component';
 
 @Component({
   selector: 'app-hamburger',
   template: `
     <button ejs-dropdownbutton
       #hamburgerBtn
+      id="hamburgerBtn"
       iconCss="e-icons e-menu"
       cssClass="e-caret-hide"
       [items]="menuItems"
@@ -58,19 +60,23 @@ export class HamburgerComponent {
         break;
       case 'collapseGraph':
         this.collapseGraph.emit();
-        this.toggleCollapseItem();
+        this.toggleCollapseItem(this.isCollapsed);
         break;
     }
   }
 
   // toggles the collapse graph menu item text between collapsed and expanded states
-  private toggleCollapseItem() {
+  public toggleCollapseItem(isGraphCollapsed: boolean) {
     const item = this.menuItems.find(i => i.id === 'collapseGraph')!;
-    this.isCollapsed = !this.isCollapsed;
-    item.text    = this.isCollapsed ? 'Expand Graph'  : 'Collapse Graph';
-    item.iconCss = this.isCollapsed ? 'e-icons e-expand' : 'e-icons e-collapse-2';
+    item.text    = isGraphCollapsed ? 'Expand Graph'  : 'Collapse Graph';
+    item.iconCss = isGraphCollapsed ? 'e-icons e-expand' : 'e-icons e-collapse-2';
 
     // Apply back to the Angular wrapper and rebind
-    this.ddBtn.items = this.menuItems;
+    if (this.ddBtn) {
+      this.ddBtn.items = this.menuItems;
+    } else {
+      let hamburger = (document.getElementById('hamburgerBtn') as any).ej2_instances[0];
+      hamburger.items = this.menuItems;
+    }
   }
 }
