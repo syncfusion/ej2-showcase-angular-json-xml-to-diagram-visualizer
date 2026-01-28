@@ -13,6 +13,7 @@ import { DiagramComponent } from '../diagram/diagram.component';
 
 @Component({
   selector: 'app-hamburger',
+  standalone: false,
   template: `
     <button ejs-dropdownbutton
       #hamburgerBtn
