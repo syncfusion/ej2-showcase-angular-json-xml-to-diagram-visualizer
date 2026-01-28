@@ -14,6 +14,7 @@ interface JsonPropertyLine {
 
 @Component({
   selector: 'app-node-popup',
+  standalone: false,
   template: `
     <ejs-dialog
       #nodeDetailsDialog

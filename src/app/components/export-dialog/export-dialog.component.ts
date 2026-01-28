@@ -9,6 +9,7 @@ import { DialogComponent } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'app-export-dialog',
+  standalone: false,
   template: `
     <div id="export-dialog">
       <ejs-dialog

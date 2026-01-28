@@ -12,6 +12,7 @@ import {
 
 @Component({
   selector: 'app-spinner',
+  standalone: false,
   template: `<div id="spinner"></div>`,
 })
 export class SpinnerComponent implements AfterViewInit {

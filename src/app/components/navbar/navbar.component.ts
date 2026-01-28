@@ -4,6 +4,7 @@ import { EditorService } from '../../services/editor.service';
 
 @Component({
   selector: 'app-navbar',
+  standalone: false,
   template: `
     <div class="navbar">
       <div class="navbar-left">

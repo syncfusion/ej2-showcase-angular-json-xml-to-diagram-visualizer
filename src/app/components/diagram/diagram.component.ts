@@ -31,6 +31,7 @@ import { HamburgerComponent } from '../hamburger/hamburger.component';
 
 @Component({
   selector: 'app-diagram',
+  standalone: false,
   template: `
     <ejs-diagram
       id="diagram"

@@ -22,6 +22,7 @@ import { DiagramComponent } from '../diagram/diagram.component';
 
 @Component({
   selector: 'app-editor',
+  standalone: false,
   template: `
     <nu-monaco-editor
       #monacoEditor

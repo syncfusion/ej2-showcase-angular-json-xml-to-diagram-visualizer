@@ -18,6 +18,7 @@ import {
 @Component({
   selector: 'app-toolbar',
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
   template: `
     <div class="diagram-toolbar">
       <ejs-toolbar
